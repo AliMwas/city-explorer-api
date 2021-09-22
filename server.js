@@ -1,20 +1,23 @@
 'use strict';
 
-// make a variable to use the express library
+
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 
-// serevr has all the properities and methods in express
+
 const server = express();
 
-const pokeData = require('./assets/poke.json')
+const weatherServer = require('./data/weather.json');
+
 
 const PORT = process.env.PORT;
 server.use(cors());
 
 // localhost:3005/
 // https://class07-301d33.herokuapp.com/
+
+
 server.get('/',(req,res)=>{
     res.status(200).send('home route')
 })
@@ -25,26 +28,46 @@ server.get('/test',(request,response)=>{
     response.send('api server is working')
 })
 
+
+class Forecast {
+    constructor(date, description) {
+        this.description = description;
+       
+        this.date = date;
+      
+    }
+}
+
 // localhost:3005/getPokemon?pokeName=charmander&pokeLevel=10
 // https://class07-301d33.herokuapp.com/?pokeName=charmander&pokeLevel=10
-server.get('/getPokemon',(req,res)=>{
-    // res.send(pokeData);
+server.get('/weatherServer',(req,res)=>{
+   
 
-    let pokemonName = req.query.pokeName;
+    let city = req.query.city;
+
     console.log(req.query);
-    console.log(req.query.pokeName)
-    let pokeInfo = pokeData.results.find((item)=>{
-        if(item.name === pokemonName) {
-            return item
+    console.log(req.query.city)
+
+    let weather = weatherData.find((value)=>{
+        if( weather.city_name() === city) {
+          
+            return value
         }
         
-    })
-    console.log('pokeInfo',pokeInfo)
-    res.send(pokeInfo)
+    });
+
+    let weatherObj = city.data.map(weather => new Forecast
+        (`date: ${weather.datetime}`,
+            `lat  ${weather.lat},long ${weather.lon} info ${weather.weather.description} `));
+
+
+
+    console.log('weather', weatherObj)
+    res.send(weatherObj);
 
 })
 
-// localhost:3005/ANYTHING
+
 server.get('*',(req,res)=>{
     res.status(404).send('route is not found')
 })
