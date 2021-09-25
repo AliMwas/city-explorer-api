@@ -8,10 +8,11 @@ const cors = require('cors');
 
 const server = express();
 
-const weatherServer = require('./data/weather.json');
+const weatherServer = require('/data/weather.json');
 
 
 const PORT = process.env.PORT;
+
 server.use(cors());
 
 // localhost:3005/
@@ -48,7 +49,7 @@ server.get('/weatherServer',(req,res)=>{
     console.log(req.query);
     console.log(req.query.city)
 
-    let weather = weatherData.find((value)=>{
+    let weather = weatherServer.find((value)=>{
         if( weather.city_name() === city) {
           
             return value
@@ -56,7 +57,7 @@ server.get('/weatherServer',(req,res)=>{
         
     });
 
-    let weatherObj = city.data.map(weather => new Forecast
+    let weatherObj = weather.data.map(weather => new Forecast
         (`date: ${weather.datetime}`,
             `lat  ${weather.lat},long ${weather.lon} info ${weather.weather.description} `));
 
